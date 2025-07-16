@@ -7,15 +7,15 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      remotes:{
-        sharedComp:'http://localhost:3010/assets/remoteEntry.js'
-      },
-      name:'HomeApp',
+      name:'profileApp',
       filename:'remoteEntry.js',
       exposes:{
-        './Home':'./src/App.jsx'
+        './Profile':'./src/App.jsx'
       },
-      shared:['react', 'react-dom', 'react-redux', '@reduxjs/toolkit', 'react-router-dom']
+      shared:['react','react-redux','react-dom', 'react-router-dom'],
+      remotes:{
+        sharedComp:'http://localhost:3010/assets/remoteEntry.js'
+      }
     })
   ],
   build:{

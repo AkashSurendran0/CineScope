@@ -1,10 +1,10 @@
-import React, {useState} from 'react'
+import React,{useState} from 'react'
 import { Star, Clock, User, X, Send } from 'lucide-react';
-import Navbar from 'sharedComp/Navbar'
 import Sidebar from 'sharedComp/Sidebar'
+import Navbar from 'sharedComp/Navbar'
 
-function Home() {
-     const [selectedReview, setSelectedReview] = useState(null);
+function YourReview() {
+    const [selectedReview, setSelectedReview] = useState(null);
     const [comments, setComments] = useState({});
     const [newComment, setNewComment] = useState('');
 
@@ -32,50 +32,6 @@ function Home() {
         fullReview: "Inception is a tour de force of filmmaking that challenges audiences to think deeply about the nature of reality and dreams. Christopher Nolan has crafted a complex narrative that operates on multiple levels, literally and figuratively. The film's exploration of shared dreaming is both scientifically fascinating and emotionally resonant. Leonardo DiCaprio delivers a powerful performance as Dom Cobb, a man haunted by his past and desperate for redemption. The practical effects and cinematography are stunning, creating dreamscapes that feel both surreal and believable. This is cinema at its most ambitious and rewarding.",
         genre: "Sci-Fi, Thriller"
         },
-        {
-        id: 3,
-        title: "Parasite",
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        rating: 4.7,
-        reviewer: "Michael Rodriguez",
-        date: "3 days ago",
-        preview: "Bong Joon-ho's social thriller is a perfect blend of dark comedy and horror...",
-        fullReview: "Parasite is a masterclass in storytelling that seamlessly blends genres while delivering a powerful commentary on class inequality. Bong Joon-ho's direction is precise and purposeful, with every frame serving the narrative. The film's exploration of social stratification is both specific to Korean society and universally relevant. The performances are outstanding across the board, with the entire cast bringing depth and nuance to their roles. The film's ability to shift from comedy to thriller to horror without losing its emotional core is remarkable. This is essential cinema that will be studied and celebrated for years to come.",
-        genre: "Thriller, Drama, Comedy"
-        },
-        {
-        id: 4,
-        title: "Dune",
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        rating: 4.2,
-        reviewer: "Emma Thompson",
-        date: "5 days ago",
-        preview: "Denis Villeneuve brings Frank Herbert's epic to life with stunning visuals...",
-        fullReview: "Dune is a visually spectacular adaptation that captures the grandeur and complexity of Frank Herbert's beloved novel. Denis Villeneuve's direction is both epic and intimate, bringing the desert planet of Arrakis to life with breathtaking cinematography. The film's production design is extraordinary, creating a lived-in universe that feels both alien and familiar. Timothée Chalamet delivers a compelling performance as Paul Atreides, effectively conveying the character's burden and destiny. While the film covers only the first half of the novel, it succeeds in establishing the world and characters with remarkable depth. The score by Hans Zimmer is powerful and otherworldly, perfectly complementing the film's themes.",
-        genre: "Sci-Fi, Adventure, Drama"
-        },
-        {
-        id: 5,
-        title: "The Grand Budapest Hotel",
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        rating: 4.4,
-        reviewer: "David Park",
-        date: "1 week ago",
-        preview: "Wes Anderson's whimsical masterpiece is a visual and comedic delight...",
-        fullReview: "The Grand Budapest Hotel is Wes Anderson at his most refined and entertaining. The film's meticulous production design creates a dollhouse-like world that is both artificial and emotionally authentic. Ralph Fiennes delivers a career-best performance as the eccentric concierge Gustave H., bringing wit, charm, and unexpected depth to the role. The film's exploration of friendship, loyalty, and the passing of an era is both touching and profound. Anderson's signature visual style is perfectly suited to this story, with every frame composed like a work of art. The ensemble cast is uniformly excellent, and the film's blend of comedy and melancholy creates a uniquely satisfying viewing experience.",
-        genre: "Comedy, Drama, Adventure"
-        },
-        {
-        id: 6,
-        title: "Mad Max: Fury Road",
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        rating: 4.6,
-        reviewer: "Lisa Wong",
-        date: "4 days ago",
-        preview: "George Miller delivers an adrenaline-fueled masterpiece of action cinema...",
-        fullReview: "Mad Max: Fury Road is a relentless thrill ride that redefines what action cinema can be. George Miller's direction is kinetic and visceral, creating a post-apocalyptic world that feels both fantastical and terrifyingly plausible. The film's practical effects and stunt work are extraordinary, delivering action sequences that are both spectacular and coherent. Charlize Theron's Furiosa is a powerful and complex character who drives the emotional core of the story. The film's feminist themes are woven naturally into the narrative, never feeling forced or didactic. The cinematography and editing create a sense of constant motion and urgency that keeps viewers on the edge of their seats. This is action filmmaking at its absolute best.",
-        genre: "Action, Adventure, Sci-Fi"
-        }
     ];
 
     const handleReviewClick = (review) => {
@@ -126,15 +82,16 @@ function Home() {
         return stars;
     };
 
+
     return (
-        <>
+        <div>
             <Navbar/>
             <div className='flex'>
-                <Sidebar/>  
+                <Sidebar/>
                 <div className="min-h-screen bg-gray-50">
                 {/* Main Content */}
                 <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-8">Latest Reviews</h2>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Reviews</h2>
                     
                     {/* Reviews Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -300,10 +257,10 @@ function Home() {
                     </div>
                     </div>
                 )}
-                </div>   
+                </div>  
             </div>
-        </>
+        </div>
     )
 }
 
-export default Home
+export default YourReview

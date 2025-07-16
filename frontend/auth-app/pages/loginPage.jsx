@@ -4,9 +4,10 @@ import { setError, removeErrors } from '../features/loginPageErrors'
 import { useRef } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import {useNavigate} from 'react-router-dom'
 
 function LoginPage() {
-    // const navigate=useNavigate()
+    const navigate=useNavigate()
     const dispatch=useDispatch()
     const currentState=useSelector((state)=>state.setLogin)
     const loginErrors=useSelector((state)=>state.loginErrors)
@@ -116,22 +117,23 @@ function LoginPage() {
     }
 
     const loginUser = async (e) =>{
-        e.preventDefault()
-        const result=validateLoginForm()
-        if(result.success){
-            const response=await axios.post('http://localhost:5222/userLogIn', result.formData)
-            if(response.data.success){
-                const userData={
-                    token:response.data.token,
-                    email:response.data.email
-                }
-                localStorage.setItem('userInfo', JSON.stringify(userData))
-                toast.success(response.data.message)
-                // navigate('/')
-            }else{
-                toast.error(response.data.message)
-            }
-        }
+        navigate('/')
+        // e.preventDefault()
+        // const result=validateLoginForm()
+        // if(result.success){
+        //     const response=await axios.post('http://localhost:5222/userLogIn', result.formData)
+        //     if(response.data.success){
+        //         const userData={
+        //             token:response.data.token,
+        //             email:response.data.email
+        //         }
+        //         localStorage.setItem('userInfo', JSON.stringify(userData))
+        //         toast.success(response.data.message)
+        //         // navigate('/')
+        //     }else{
+        //         toast.error(response.data.message)
+        //     }
+        // }
     }
 
     const signUpUser = async (e) =>{
@@ -146,7 +148,7 @@ function LoginPage() {
                 }
                 localStorage.setItem('userInfo', JSON.stringify(userData))
                 toast.success(response.data.message)
-                // navigate('/')
+                navigate('/')
             }else{
                 toast.error(response.data.message)
             }   

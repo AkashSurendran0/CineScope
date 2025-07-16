@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "auth-app",
+            "type": "shell",
+            "command":"npm run build-preview",
+            "options": {
+                "cwd": "frontend/auth-app"
+            },
+            "group": "build"
+        },
+        {
+            "label": "home-app",
+            "type": "shell",
+            "command":"npm run build-preview",
+            "options": {
+                "cwd": "frontend/home-app"
+            },
+            "group": "build"
+        },
+        {
+            "label": "shared-components",
+            "type": "shell",
+            "command":"npm run build-preview",
+            "options": {
+                "cwd": "frontend/shared-components"
+            },
+            "group": "build"
+        },
+        {
+            "label": "container-app",
+            "type": "shell",
+            "command":"npm run dev",
+            "options": {
+                "cwd": "frontend/container-app"
+            },
+            "group": "build"
+        },
+        {
+            "label": "addReview-app",
+            "type": "shell",
+            "command":"npm run build-preview",
+            "options": {
+                "cwd": "frontend/addReview-app"
+            },
+            "group": "build"
+        },
+        {
+            "label": "yourReviews-app",
+            "type": "shell",
+            "command":"npm run build-preview",
+            "options": {
+                "cwd": "frontend/yourreview-app"
+            },
+            "group": "build"
+        },
+         {
+            "label": "profile-app",
+            "type": "shell",
+            "command":"npm run build-preview",
+            "options": {
+                "cwd": "frontend/profile-app"
+            },
+            "group": "build"
+        },
+    ]
+}

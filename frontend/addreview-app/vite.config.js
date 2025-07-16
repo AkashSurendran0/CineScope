@@ -7,15 +7,15 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
+      name:'addReviewApp',
+      filename:'remoteEntry.js',
+      exposes:{
+        './AddReview':'./src/App.jsx'
+      },
       remotes:{
         sharedComp:'http://localhost:3010/assets/remoteEntry.js'
       },
-      name:'HomeApp',
-      filename:'remoteEntry.js',
-      exposes:{
-        './Home':'./src/App.jsx'
-      },
-      shared:['react', 'react-dom', 'react-redux', '@reduxjs/toolkit', 'react-router-dom']
+      shared:['react','react-dom','react-redux','@reduxjs/toolkit']
     })
   ],
   build:{

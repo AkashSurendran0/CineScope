@@ -1,14 +1,13 @@
 import React from 'react'
-import Home from './components/home'
+import AddReview from './components/addReview'
 import Store from 'sharedComp/Store'
 import {Provider} from 'react-redux'
-import {BrowserRouter} from 'react-router-dom'
 
 function App() {
   return (
-      <Provider store={Store}>
-        <Home/>
-      </Provider>
+    <Provider store={Store}>
+      <AddReview/>
+    </Provider>
   )
 }
 

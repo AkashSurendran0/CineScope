@@ -10,12 +10,12 @@ export default defineConfig({
       remotes:{
         sharedComp:'http://localhost:3010/assets/remoteEntry.js'
       },
-      name:'HomeApp',
+      name:'yourReviewApp',
       filename:'remoteEntry.js',
       exposes:{
-        './Home':'./src/App.jsx'
+        './YourReview':'./src/App.jsx'
       },
-      shared:['react', 'react-dom', 'react-redux', '@reduxjs/toolkit', 'react-router-dom']
+      shared:['react', 'react-dom', 'react-router-dom', 'react-redux']
     })
   ],
   build:{

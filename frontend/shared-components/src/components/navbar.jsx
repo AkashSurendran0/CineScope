@@ -1,11 +1,10 @@
 import { LogOut, UserCircle } from 'lucide-react'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function Navbar() {
-    // const navigate=useNavigate()
+    const navigate=useNavigate()
     const logoutUser = () =>{
-        // localStorage.removeItem('userInfo')
-        // navigate('/login')
+        navigate('/login')
     }
 
     return (

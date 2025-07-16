@@ -1,14 +1,16 @@
 import React from 'react'
-import Home from './components/home'
+import Profile from './components/profile'
 import Store from 'sharedComp/Store'
 import {Provider} from 'react-redux'
 import {BrowserRouter} from 'react-router-dom'
 
 function App() {
   return (
+    // <BrowserRouter>
       <Provider store={Store}>
-        <Home/>
+        <Profile/>
       </Provider>
+    // </BrowserRouter>
   )
 }
 

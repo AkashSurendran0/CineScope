@@ -14,7 +14,7 @@ export default defineConfig({
         './Sidebar':'./src/components/sidebar.jsx',
         './Store':'./src/store.js'
       },
-      shared:['react','react-dom','react-redux','@reduxjs/toolkit']
+      shared:['react','react-dom','react-redux','@reduxjs/toolkit','react-router-dom']
     })
   ],
   build:{

@@ -9,9 +9,12 @@ export default defineConfig({
     federation({
       remotes:{
         authApp:'http://localhost:3000/assets/remoteEntry.js',
-        homeApp:'http://localhost:3001/assets/remoteEntry.js'
+        homeApp:'http://localhost:3001/assets/remoteEntry.js',
+        addReviewApp:'http://localhost:3002/assets/remoteEntry.js',
+        yourReviewApp:'http://localhost:3003/assets/remoteEntry.js',
+        profileApp:'http://localhost:3004/assets/remoteEntry.js'
       },
-      shared:['react','react-redux', 'react-dom']
+      shared:['react','react-redux', 'react-dom','react-router-dom']
     })
   ],
   build:{

@@ -1,18 +1,17 @@
 {
-  "name": "shared-components",
+  "name": "yourreview-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3010 --strictPort",
+    "dev": "vite --port 3003 --strictPort",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview --port 3010 --strictPort",
+    "preview": "vite preview --port 3003 --strictPort",
     "build-preview": "npm run build && npm run preview"
   },
   "dependencies": {
     "@originjs/vite-plugin-federation": "^1.4.1",
-    "@reduxjs/toolkit": "^2.8.2",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

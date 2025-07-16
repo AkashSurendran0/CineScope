@@ -4,31 +4,23 @@ import { setSidebar } from '../features/toggleSidebar'
 // import { setSection } from '../../features/Home_Page/toggleSections'
 import { Menu, X, Plus, UserCircle, Film, Settings } from 'lucide-react'
 // import { isTokenExpired } from '../../security/jwtValidator'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function SideBar() {
-    // const navigate=useNavigate()
+    const navigate=useNavigate()
     const dispatch=useDispatch()
     const activeSidebar=useSelector((state)=>state.toggleSidebar.value)
     // const activeSection=useSelector((state)=>state.toggleSection)
 
     const userItems = [
-        { id: 'Reviews', icon: <Film size={20} />, name: 'Reviews' },
-        { id: 'Add Review', icon: <Plus size={20} />, name: 'Add Review' },
-        { id: 'Your Reviews', icon: <UserCircle size={20} />, name: 'Your Reviews' },
-        { id: 'Profile', icon: <Settings size={20} />, name: 'Profile' },
+        { id: 'Reviews', icon: <Film size={20} />, name: 'Reviews', navigate:'/' },
+        { id: 'Add Review', icon: <Plus size={20} />, name: 'Add Review', navigate:'/addReview' },
+        { id: 'Your Reviews', icon: <UserCircle size={20} />, name: 'Your Reviews', navigate:'/yourReviews' },
+        { id: 'Profile', icon: <Settings size={20} />, name: 'Profile', navigate:'/profile' },
     ];
 
     const changeSection = async (section) =>{
-        // const token=JSON.parse(localStorage.getItem('userInfo'))
-        // const tokenExpired=await isTokenExpired(token)
-        // console.log(tokenExpired)
-        // if(!tokenExpired){
-        //     dispatch(setSection({section: section}))
-        // }else if(tokenExpired){
-        //     if(token) localStorage.removeItem('userInfo');
-        //     navigate('/login')
-        // }
+        navigate(section)
     }
 
     return (
@@ -44,7 +36,7 @@ function SideBar() {
                     <ul className='space-y-1'>
                         {userItems.map(item=>(
                             <li key={item.id}>
-                                <button onClick={()=>changeSection(item.id)} className={`flex items-center ${activeSidebar? 'justify-start px-4':'justify-center px-2'} py-3 w-full hover:bg-gray-700 transition-colors`}>
+                                <button onClick={()=>changeSection(item.navigate)} className={`flex items-center ${activeSidebar? 'justify-start px-4':'justify-center px-2'} py-3 w-full hover:bg-gray-700 transition-colors`}>
                                     <span className='inline-flex'>{item.icon}</span>
                                     {activeSidebar && <span className='ml-3'>{item.name}</span>}
                                 </button>
