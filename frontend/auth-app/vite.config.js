@@ -12,7 +12,7 @@ export default defineConfig({
       exposes:{
         './LoginPage':'./src/App.jsx'
       },
-      shared:['react','react-redux', 'react-router-dom']
+      shared:['react','react-redux', 'react-router-dom', 'react-toastify']
     })
   ],
   build:{

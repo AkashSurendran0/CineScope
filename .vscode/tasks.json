@@ -55,12 +55,48 @@
             },
             "group": "build"
         },
-         {
+        {
             "label": "profile-app",
             "type": "shell",
             "command":"npm run build-preview",
             "options": {
                 "cwd": "frontend/profile-app"
+            },
+            "group": "build"
+        },
+        {
+            "label": "api-gateway",
+            "type": "shell",
+            "command":"npm start",
+            "options": {
+                "cwd": "backend/api-gateway"
+            },
+            "group": "build"
+        },
+        {
+            "label": "user-service",
+            "type": "shell",
+            "command":"npm start",
+            "options": {
+                "cwd": "backend/user-service"
+            },
+            "group": "build"
+        },
+        {
+            "label": "movie-service",
+            "type": "shell",
+            "command":"npm start",
+            "options": {
+                "cwd": "backend/movie-service"
+            },
+            "group": "build"
+        },
+        {
+            "label": "review-service",
+            "type": "shell",
+            "command":"npm start",
+            "options": {
+                "cwd": "backend/review-service"
             },
             "group": "build"
         },

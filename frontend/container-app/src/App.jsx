@@ -5,16 +5,37 @@ import AddReviewApp from 'addReviewApp/AddReview'
 import YourReview from 'yourReviewApp/YourReview'
 import ProfileApp from 'profileApp/Profile'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import { RedirectToHome, RedirectToLogin } from './authenticator'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<AuthApp/>}/>
-        <Route path='/' element={<HomeApp/>}/>
-        <Route path='/addReview' element={<AddReviewApp/>}/>
-        <Route path='/yourReviews' element={<YourReview/>}/>
-        <Route path='/profile' element={<ProfileApp/>}/>
+        <Route path='/login' element={
+          <RedirectToHome>
+            <AuthApp/>
+          </RedirectToHome>
+        }/>
+        <Route path='/' element={
+          <RedirectToLogin>
+            <HomeApp/>
+          </RedirectToLogin>
+        }/>
+        <Route path='/addReview' element={
+          <RedirectToLogin>
+            <AddReviewApp/>
+          </RedirectToLogin>
+        }/>
+        <Route path='/yourReviews' element={
+          <RedirectToLogin>
+            <YourReview/>
+          </RedirectToLogin> 
+        }/>
+        <Route path='/profile' element={
+          <RedirectToLogin>
+            <ProfileApp/>
+          </RedirectToLogin> 
+        }/>
       </Routes>
     </BrowserRouter>
   )

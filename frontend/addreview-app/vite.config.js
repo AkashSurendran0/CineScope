@@ -15,7 +15,7 @@ export default defineConfig({
       remotes:{
         sharedComp:'http://localhost:3010/assets/remoteEntry.js'
       },
-      shared:['react','react-dom','react-redux','@reduxjs/toolkit']
+      shared:['react','react-dom','react-redux','@reduxjs/toolkit', 'react-router-dom']
     })
   ],
   build:{

@@ -14,7 +14,7 @@ export default defineConfig({
         yourReviewApp:'http://localhost:3003/assets/remoteEntry.js',
         profileApp:'http://localhost:3004/assets/remoteEntry.js'
       },
-      shared:['react','react-redux', 'react-dom','react-router-dom']
+      shared:['react','react-redux', 'react-dom','react-router-dom','react-toastify']
     })
   ],
   build:{

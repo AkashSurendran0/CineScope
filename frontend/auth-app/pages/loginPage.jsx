@@ -117,36 +117,27 @@ function LoginPage() {
     }
 
     const loginUser = async (e) =>{
-        navigate('/')
-        // e.preventDefault()
-        // const result=validateLoginForm()
-        // if(result.success){
-        //     const response=await axios.post('http://localhost:5222/userLogIn', result.formData)
-        //     if(response.data.success){
-        //         const userData={
-        //             token:response.data.token,
-        //             email:response.data.email
-        //         }
-        //         localStorage.setItem('userInfo', JSON.stringify(userData))
-        //         toast.success(response.data.message)
-        //         // navigate('/')
-        //     }else{
-        //         toast.error(response.data.message)
-        //     }
-        // }
+        e.preventDefault()
+        const result=validateLoginForm()
+        if(result.success){
+            const response=await axios.post('http://localhost:5000/users/userLogIn', result.formData, {withCredentials:true})
+            if(response.data.success){
+                localStorage.setItem('accessToken', response.data.token)
+                toast.success(response.data.message)
+                navigate('/')
+            }else{
+                toast.error(response.data.message)
+            }
+        }
     }
 
     const signUpUser = async (e) =>{
         e.preventDefault()
         const result=validateSignInForm()
         if(result.success){
-            const response=await axios.post('http://localhost:5222/userSignIn', result.formData)
+            const response=await axios.post('http://localhost:5000/users/userSignIn', result.formData, {withCredentials:true})
             if(response.data.success){
-                const userData={
-                    token:response.data.token,
-                    email:response.data.email
-                }
-                localStorage.setItem('userInfo', JSON.stringify(userData))
+                localStorage.setItem('accessToken', response.data.token)
                 toast.success(response.data.message)
                 navigate('/')
             }else{
@@ -157,10 +148,16 @@ function LoginPage() {
 
     const changePass = async (e) =>{
         e.preventDefault()
-        // const result=validateForgotPassForm()
-        // if(result.success){
-
-        // }
+        const result=validateForgotPassForm()
+        if(result.success){
+            const response=await axios.post('http://localhost:5000/users/changePass', result.formData)
+            if(response.data.success){
+                toast.success(response.data.message)
+                dispatch(setLogin({field:'login'}))
+            }else{
+                toast.error(response.data.message)
+            }
+        }
     }
 
     return (

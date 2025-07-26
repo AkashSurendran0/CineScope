@@ -1,105 +1,49 @@
 import React,{useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import { Search, Star, User, Check, X } from 'lucide-react';
 import Navbar from 'sharedComp/Navbar'
 import Sidebar from 'sharedComp/Sidebar'
+import { useEffect } from 'react';
+import axios from 'axios'
+import {toast} from 'react-toastify'
 
 function AddReview() {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedMovie, setSelectedMovie] = useState(null);
-    const [showResults, setShowResults] = useState(false);
+    const navigate=useNavigate()
+    const [query, setQuery]=useState('')
+    const [queriedMovies, setQueriedMovies]=useState(null)
+    const [selectedMovie, setSelectedMovie]=useState(null)
+
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [reviewText, setReviewText] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
 
-    // Sample movie database
-    const movieDatabase = [
-        {
-        id: 1,
-        title: "The Dark Knight",
-        year: 2008,
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        genre: "Action, Crime, Drama",
-        director: "Christopher Nolan"
-        },
-        {
-        id: 2,
-        title: "Inception",
-        year: 2010,
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        genre: "Sci-Fi, Thriller",
-        director: "Christopher Nolan"
-        },
-        {
-        id: 3,
-        title: "Parasite",
-        year: 2019,
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        genre: "Thriller, Drama, Comedy",
-        director: "Bong Joon-ho"
-        },
-        {
-        id: 4,
-        title: "Dune",
-        year: 2021,
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        genre: "Sci-Fi, Adventure, Drama",
-        director: "Denis Villeneuve"
-        },
-        {
-        id: 5,
-        title: "The Grand Budapest Hotel",
-        year: 2014,
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        genre: "Comedy, Drama, Adventure",
-        director: "Wes Anderson"
-        },
-        {
-        id: 6,
-        title: "Mad Max: Fury Road",
-        year: 2015,
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        genre: "Action, Adventure, Sci-Fi",
-        director: "George Miller"
-        },
-        {
-        id: 7,
-        title: "Interstellar",
-        year: 2014,
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        genre: "Sci-Fi, Drama, Adventure",
-        director: "Christopher Nolan"
-        },
-        {
-        id: 8,
-        title: "The Social Network",
-        year: 2010,
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        genre: "Drama, Biography",
-        director: "David Fincher"
+    useEffect(()=>{
+        const delay=setTimeout(() => {
+            if(query.trim()){
+                fetchMovies()
+            }
+        }, 1000);
+
+        return ()=> clearTimeout(delay)
+    },[query])
+
+    const fetchMovies = async () =>{
+        console.log(query, 'query')
+        const response=await axios.get(`http://localhost:5000/movies/searchMovie?query=${query}`)
+        if(response.data.success){
+            console.log(response.data.movies, 'movies')
+            setQueriedMovies(response.data.movies)
+        }else{
+            toast.error(response.data.message)
         }
-    ];
+    }
 
-    const handleSearch = (query) => {
-        setSearchQuery(query);
-        if (query.trim()) {
-        setShowResults(true);
-        } else {
-        setShowResults(false);
-        }
-    };
-
-    const filteredMovies = movieDatabase.filter(movie =>
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        movie.director.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        movie.genre.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const handleMovieSelect = (movie) => {
-        setSelectedMovie(movie);
-        setSearchQuery(movie.title);
-        setShowResults(false);
-    };
+    const setMovie=(movie)=>{
+        setSelectedMovie(movie)
+        setQueriedMovies(null)
+        setQuery('')
+    }
 
     const handleStarClick = (starRating) => {
         setRating(starRating);
@@ -113,25 +57,34 @@ function AddReview() {
         setHoverRating(0);
     };
 
-    const handleSubmitReview = () => {
-        if (selectedMovie && rating > 0 && reviewText.trim()) {
-        // Here you would typically send the review to your backend
-        console.log({
-            movie: selectedMovie,
-            rating,
-            review: reviewText.trim(),
-            timestamp: new Date().toISOString()
-        });
-        
-        setShowSuccess(true);
-        setTimeout(() => {
-            setShowSuccess(false);
-            // Reset form
-            setSelectedMovie(null);
-            setSearchQuery('');
-            setRating(0);
-            setReviewText('');
-        }, 2000);
+    const handleSubmitReview = async () => {
+        if(!selectedMovie) return toast.error('Please select a movie')
+        if(rating<=0) return toast.error('Please provide rating')
+        if(reviewText.trim()=='') return toast.error('Please provide a review')
+
+        const data={
+            movie:selectedMovie,
+            rating:rating,
+            review:reviewText
+        }
+        console.log(data)
+        const response=await axios.post('http://localhost:5000/reviews/addReview', data,{
+            withCredentials: true,
+            headers:{
+                Authorization:`Bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        if(response.data.success){
+            setShowSuccess(true);
+            setTimeout(() => {
+                setShowSuccess(false);
+                setSelectedMovie(null);
+                setRating(0);
+                setReviewText('');
+                navigate('/')
+            }, 2000);
+        }else{
+            toast.error(response.data.message)
         }
     };
 
@@ -183,33 +136,29 @@ function AddReview() {
                         </div>
                         <input
                             type="text"
-                            value={searchQuery}
-                            onChange={(e) => handleSearch(e.target.value)}
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Search by movie title, director, or genre..."
                         />
                         
-                        {/* Search Results Dropdown */}
-                        {showResults && searchQuery && (
+                        {queriedMovies && (
                             <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none">
-                            {filteredMovies.length > 0 ? (
-                                filteredMovies.map((movie) => (
+                            {queriedMovies.length > 0 ? (
+                                queriedMovies.map((movie) => (
                                 <div
                                     key={movie.id}
-                                    onClick={() => handleMovieSelect(movie)}
+                                    onClick={() => setMovie(movie)}
                                     className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-blue-50 flex items-center space-x-3"
                                 >
                                     <img
-                                    src={movie.poster}
+                                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                     alt={movie.title}
-                                    className="w-12 h-16 object-cover rounded"
+                                    className="w-14 h-18 object-cover rounded"
                                     />
                                     <div className="flex-1">
                                     <div className="font-medium text-gray-900">
-                                        {movie.title} ({movie.year})
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                        {movie.director} • {movie.genre}
+                                        {movie.original_title} ({movie.release_date.split('-')[0]})
                                     </div>
                                     </div>
                                 </div>
@@ -230,24 +179,17 @@ function AddReview() {
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Selected Movie</h3>
                         <div className="flex items-start space-x-4">
                             <img
-                            src={selectedMovie.poster}
+                            src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
                             alt={selectedMovie.title}
                             className="w-24 h-32 object-cover rounded-lg shadow-md"
                             />
                             <div className="flex-1">
                             <h4 className="text-xl font-bold text-gray-900 mb-2">
-                                {selectedMovie.title} ({selectedMovie.year})
+                                {selectedMovie.original_title} ({selectedMovie.release_date.split('-')[0]})
                             </h4>
-                            <p className="text-gray-600 mb-1">
-                                <span className="font-medium">Director:</span> {selectedMovie.director}
-                            </p>
-                            <p className="text-gray-600">
-                                <span className="font-medium">Genre:</span> {selectedMovie.genre}
-                            </p>
                             <button
                                 onClick={() => {
                                 setSelectedMovie(null);
-                                setSearchQuery('');
                                 setRating(0);
                                 setReviewText('');
                                 }}

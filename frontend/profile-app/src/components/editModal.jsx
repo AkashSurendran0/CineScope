@@ -1,25 +1,16 @@
 import { useState, useEffect } from 'react';
 import { X, Upload } from 'lucide-react';
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
-export default function EditUserModal({showModal, user}) {
+export default function EditUserModal({showModal, userDetails}) {
     const [formData, setFormData] = useState({
-        name: '',
+        name: userDetails.name,
+        image:''
     });
     const [formErrors, setFormErrors]=useState({
         name:'',
     })
-    useEffect(()=>{
-        if(user){
-            Object.keys(user).map(key=>{
-                setFormData(prev=>({
-                    ...prev,
-                    [key]:user[key]
-                }))
-            })
-        }
-    }, [user])
     const [imagePreview, setImagePreview] = useState(null);
     const [checkImage, setCheckImage] = useState(false)
 
@@ -37,9 +28,9 @@ export default function EditUserModal({showModal, user}) {
         setCheckImage(true)
         const file = e.target.files[0];
         if (file) {
-        setFormData(prev => ({ ...prev, image: file }));
-        const previewUrl = URL.createObjectURL(file);
-        setImagePreview(previewUrl);
+            setFormData(prev => ({ ...prev, image: file }));
+            const previewUrl = URL.createObjectURL(file);
+            setImagePreview(previewUrl);
         }
     };
 
@@ -63,21 +54,23 @@ export default function EditUserModal({showModal, user}) {
         e.preventDefault();
         const response=validateForm()
         if(response.success){
-            formData.email=user.email
             if(formData.image){
                 const editForm=new FormData()
                 editForm.append('file', formData.image)
-                editForm.append('upload_preset', 'Slate_dashboard')
+                editForm.append('upload_preset', 'cinescope_uploads')
                 const response=await axios.post(`https://api.cloudinary.com/v1_1/djhmcbiq9/image/upload`, editForm)
                 formData.image=response.data.secure_url
             }
-            const submitResponse=await axios.post('http://localhost:5222/editUser', formData)
+            const submitResponse=await axios.post('http://localhost:5000/users/editUser', formData, {
+                withCredentials:true,
+                headers:{
+                    Authorization:`Bearer ${localStorage.getItem('accessToken')}`
+                }
+            })
             if(submitResponse.data.success){
-                // toast.success(submitResponse.data.message)
-                // refresh()
-                handleClose();
+                window.location.reload()
             }else{
-                // toast.error(submitResponse.data.message)
+                toast.error(submitResponse.data.message)
             }
         }else{
             setFormErrors({
@@ -144,6 +137,7 @@ export default function EditUserModal({showModal, user}) {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                placeholder={userDetails.name}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <p className='text-red-500'>{formErrors.name}</p>

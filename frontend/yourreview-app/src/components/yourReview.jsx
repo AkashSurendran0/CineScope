@@ -2,39 +2,58 @@ import React,{useState} from 'react'
 import { Star, Clock, User, X, Send } from 'lucide-react';
 import Sidebar from 'sharedComp/Sidebar'
 import Navbar from 'sharedComp/Navbar'
+import { useEffect } from 'react';
+import axios from 'axios'
+import {toast} from 'react-toastify'
 
 function YourReview() {
+    const [yourReviews, getReviews]=useState(null)
     const [selectedReview, setSelectedReview] = useState(null);
     const [comments, setComments] = useState({});
     const [newComment, setNewComment] = useState('');
+    const [loadedComments, loadComments]=useState([])
 
-    // Sample movie reviews data
-    const reviews = [
-        {
-        id: 1,
-        title: "The Dark Knight",
-        poster: "https://images.unsplash.com/photo-1489599077050-ded87be50326?w=300&h=400&fit=crop",
-        rating: 4.5,
-        reviewer: "Alex Johnson",
-        date: "2 days ago",
-        preview: "An absolute masterpiece that redefined superhero cinema...",
-        fullReview: "The Dark Knight stands as one of the greatest superhero films ever made. Heath Ledger's portrayal of the Joker is haunting and unforgettable, bringing a level of chaos and unpredictability that elevates the entire film. Christopher Nolan's direction is masterful, weaving together complex themes of morality, justice, and the thin line between hero and villain. The action sequences are expertly choreographed, and the film's dark, gritty tone perfectly captures the essence of Gotham City. This is not just a superhero movie; it's a crime thriller that happens to feature Batman.",
-        genre: "Action, Crime, Drama"
-        },
-        {
-        id: 2,
-        title: "Inception",
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
-        rating: 4.8,
-        reviewer: "Sarah Chen",
-        date: "1 week ago",
-        preview: "A mind-bending journey through dreams within dreams...",
-        fullReview: "Inception is a tour de force of filmmaking that challenges audiences to think deeply about the nature of reality and dreams. Christopher Nolan has crafted a complex narrative that operates on multiple levels, literally and figuratively. The film's exploration of shared dreaming is both scientifically fascinating and emotionally resonant. Leonardo DiCaprio delivers a powerful performance as Dom Cobb, a man haunted by his past and desperate for redemption. The practical effects and cinematography are stunning, creating dreamscapes that feel both surreal and believable. This is cinema at its most ambitious and rewarding.",
-        genre: "Sci-Fi, Thriller"
-        },
-    ];
+    useEffect(()=>{
+        axios.get('http://localhost:5000/reviews/getUserReviews', {
+            withCredentials:true,
+            headers:{
+                Authorization:`Bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        .then(response=>{
+            if(response.data.success){
+                getReviews(response.data.reviews)
+            }else{
+                toast.error(response.data.message)
+            }
+        })
+    },[])
 
-    const handleReviewClick = (review) => {
+    const handleReviewClick = async (review) => {
+        if (review.comments.length > 0) {
+            console.log(review, 'reviewww')
+            const commentsWithUser = await Promise.all(
+                review.comments.map(async (comment) => {
+                    const response = await axios.get(`http://localhost:5000/users/getUserName?user=${comment.user}`);
+                    if (response.data.success) {
+                        return {
+                            user: response.data.user,
+                            comment: comment.comment
+                        };
+                    } else {
+                        toast.error(response.data.message);
+                        return null;
+                    }
+                })
+            );
+
+            const validComments = commentsWithUser.filter(c => c !== null);
+            console.log(validComments)
+            loadComments(validComments);
+        } else {
+            loadComments([]);
+        }
+
         setSelectedReview(review);
     };
 
@@ -43,21 +62,36 @@ function YourReview() {
         setNewComment('');
     };
 
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
         if (newComment.trim() && selectedReview) {
-        const reviewComments = comments[selectedReview.id] || [];
-        const newCommentObj = {
-            id: Date.now(),
-            text: newComment.trim(),
-            author: "You",
-            timestamp: "Just now"
-        };
-        
-        setComments({
-            ...comments,
-            [selectedReview.id]: [...reviewComments, newCommentObj]
-        });
-        setNewComment('');
+            const data={
+                review_id:selectedReview._id,
+                comment:newComment
+            }
+            const response=await axios.post('http://localhost:5000/reviews/addComment', data, {
+                withCredentials:true,
+                headers:{
+                    Authorization:`Bearer ${localStorage.getItem('accessToken')}`
+                }
+            })
+            if(response.data.success){
+                const reviewComments = comments[selectedReview.id] || [];
+                const newCommentObj = {
+                    id: Date.now(),
+                    text: newComment.trim(),
+                    author: "You",
+                    timestamp: "Just now"
+                };
+                
+                setComments({
+                    ...comments,
+                    [selectedReview.id]: [...reviewComments, newCommentObj]
+                });
+                setNewComment('');
+            }else{
+                toast.error(response.data.message)
+            }
+
         }
     };
 
@@ -86,7 +120,7 @@ function YourReview() {
     return (
         <div>
             <Navbar/>
-            <div className='flex'>
+            <div className='flex bg-gray-50"'>
                 <Sidebar/>
                 <div className="min-h-screen bg-gray-50">
                 {/* Main Content */}
@@ -95,24 +129,23 @@ function YourReview() {
                     
                     {/* Reviews Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {reviews.map((review) => (
+                    {yourReviews && yourReviews.map((review) => (
                         <div
-                        key={review.id}
                         onClick={() => handleReviewClick(review)}
                         className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer overflow-hidden"
                         >
                         <div className="aspect-w-3 aspect-h-4 bg-gray-200">
                             <img
-                            src={review.poster}
-                            alt={review.title}
-                            className="w-full h-48 object-cover"
+                            src={`https://image.tmdb.org/t/p/w500${review.verti_image}`}
+                            alt={review.name}
+                            className="w-full h-64 object-cover"
                             />
                         </div>
                         
                         <div className="p-6">
                             <div className="flex items-center justify-between mb-2">
                             <h3 className="text-xl font-semibold text-gray-900 truncate">
-                                {review.title}
+                                {review.name}
                             </h3>
                             <div className="flex items-center space-x-1">
                                 {renderStars(review.rating)}
@@ -120,17 +153,17 @@ function YourReview() {
                             </div>
                             
                             <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                            {review.preview}
+                            {review.review}
                             </p>
                             
                             <div className="flex items-center justify-between text-sm text-gray-500">
                             <div className="flex items-center space-x-1">
                                 <User className="w-4 h-4" />
-                                <span>{review.reviewer}</span>
+                                <span>name</span>
                             </div>
                             <div className="flex items-center space-x-1">
                                 <Clock className="w-4 h-4" />
-                                <span>{review.date}</span>
+                                <span>{new Date(review.createdAt).toLocaleDateString()}</span>
                             </div>
                             </div>
                         </div>
@@ -145,7 +178,7 @@ function YourReview() {
                     <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center p-6 border-b">
                         <h2 className="text-2xl font-bold text-gray-900">
-                            {selectedReview.title}
+                            {selectedReview.name}
                         </h2>
                         <button
                             onClick={handleCloseModal}
@@ -159,8 +192,8 @@ function YourReview() {
                         <div className="flex flex-col md:flex-row gap-6">
                             <div className="md:w-1/3">
                             <img
-                                src={selectedReview.poster}
-                                alt={selectedReview.title}
+                                src={`https://image.tmdb.org/t/p/w500${selectedReview.hori_image}`}
+                                alt={selectedReview.name}
                                 className="w-full rounded-lg shadow-md"
                             />
                             <div className="mt-4">
@@ -174,13 +207,10 @@ function YourReview() {
                                 </div>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-1">
-                                <span className="font-semibold">Genre:</span> {selectedReview.genre}
-                                </p>
-                                <p className="text-sm text-gray-600 mb-1">
-                                <span className="font-semibold">Reviewer:</span> {selectedReview.reviewer}
+                                <span className="font-semibold">Reviewer:</span> name
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                <span className="font-semibold">Date:</span> {selectedReview.date}
+                                <span className="font-semibold">Date:</span> {new Date(selectedReview.createdAt).toLocaleDateString()}
                                 </p>
                             </div>
                             </div>
@@ -188,7 +218,7 @@ function YourReview() {
                             <div className="md:w-2/3">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Review</h3>
                             <p className="text-gray-700 leading-relaxed mb-6">
-                                {selectedReview.fullReview}
+                                {selectedReview.review}
                             </p>
                             
                             {/* Comments Section */}
@@ -222,6 +252,29 @@ function YourReview() {
                                     </div>
                                 </div>
                                 </div>
+
+                                {loadedComments && loadedComments.length>0 && (
+                                    <div className="space-y-4">
+                                    {loadedComments.map((comment) => (
+                                        <div className="flex space-x-3">
+                                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                            <User className="w-4 h-4 text-gray-600" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex items-center space-x-2 mb-1">
+                                                <span className="font-semibold text-sm text-gray-900">
+                                                    {comment.user}
+                                                </span>
+                                                <span className="text-xs text-gray-500">
+                                                    {comment.timestamp}
+                                                </span>
+                                                </div>
+                                                <p className="text-gray-700 text-sm">{comment.comment}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                                 
                                 {/* Comments List */}
                                 <div className="space-y-4">
@@ -243,12 +296,6 @@ function YourReview() {
                                     </div>
                                     </div>
                                 ))}
-                                
-                                {(!comments[selectedReview.id] || comments[selectedReview.id].length === 0) && (
-                                    <p className="text-gray-500 text-sm italic text-center py-8">
-                                    No comments yet. Be the first to share your thoughts!
-                                    </p>
-                                )}
                                 </div>
                             </div>
                             </div>
