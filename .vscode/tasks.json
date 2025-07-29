@@ -67,7 +67,7 @@
         {
             "label": "api-gateway",
             "type": "shell",
-            "command":"npm start",
+            "command":"npm run dev",
             "options": {
                 "cwd": "backend/api-gateway"
             },
@@ -76,7 +76,7 @@
         {
             "label": "user-service",
             "type": "shell",
-            "command":"npm start",
+            "command":"npm run dev",
             "options": {
                 "cwd": "backend/user-service"
             },
@@ -85,7 +85,7 @@
         {
             "label": "movie-service",
             "type": "shell",
-            "command":"npm start",
+            "command":"npm run dev",
             "options": {
                 "cwd": "backend/movie-service"
             },
@@ -94,7 +94,7 @@
         {
             "label": "review-service",
             "type": "shell",
-            "command":"npm start",
+            "command":"npm run dev",
             "options": {
                 "cwd": "backend/review-service"
             },
