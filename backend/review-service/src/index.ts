@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import reviewRouter from './routes/reviewRoutes';
-import connectDb from './helpers/connectDB';
+import reviewRouter from './routes/reviewRoutes.js';
+import connectDb from './helpers/connectDB.js';
 
 dotenv.config();
 const app = express();
