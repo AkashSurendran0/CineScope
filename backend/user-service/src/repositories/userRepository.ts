@@ -1,14 +1,13 @@
-import User from "../models/userModel.js"
+import { getUserModel } from "../models/userModel.js";
 
-const findById = async () =>{
-
-}
 
 const findByEmail = async (email:string) =>{
+    const User=getUserModel()
     return User.findOne({where:{email:email}})
 }
 
 const createUser = async (name:string, email:string, password:string) => {
+    const User=getUserModel()
     return User.create({
         name,
         email,
@@ -17,6 +16,7 @@ const createUser = async (name:string, email:string, password:string) => {
 }
 
 const findByEmailAndUpdatePass = async (email:string, password:string) => {
+    const User=getUserModel()
     return User.update(
         {password:password},
         {where:{email:email}}
@@ -24,10 +24,13 @@ const findByEmailAndUpdatePass = async (email:string, password:string) => {
 }
 
 const findUserById = async (userId:string) =>{
+    const User=getUserModel()
+    console.log('asdf', userId)
     return User.findByPk(userId)
 }
 
 const findByIdAndUpdate = async (userid:string, name:string, image:string) =>{
+    const User=getUserModel()
     return User.update(
         {
             name:name,
@@ -38,7 +41,6 @@ const findByIdAndUpdate = async (userid:string, name:string, image:string) =>{
 }
 
 export default {
-    findById,
     findByEmail,
     createUser,
     findByEmailAndUpdatePass,

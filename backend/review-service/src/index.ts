@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
 import reviewRouter from './routes/reviewRoutes.js';
 import connectDb from './helpers/connectDB.js';
+import loadSecrets from './helpers/vault.js';
 
-dotenv.config();
+await loadSecrets()
 const app = express();
 
 connectDb();

@@ -1,5 +1,4 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import movieRoutes from './routes/movieRoutes.js';
@@ -9,7 +8,8 @@ import { rateLimitter } from './utils/rateLimitter.js';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
-dotenv.config();
+import loadSecrets from './utils/vault.js';
+await loadSecrets();
 const app = express();
 app.use(cookieParser());
 app.use(cors({
@@ -23,7 +23,7 @@ app.use('/users', userRoutes);
 app.use('/movies', movieRoutes);
 app.use('/reviews', reviewRoutes);
 app.use(express.json());
-const PORT = process.env.PORT || 5560;
+const PORT = process.env.PORT;
 try {
     app.listen(PORT, () => {
         console.log(`Server running on ${PORT}`);

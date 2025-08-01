@@ -72,8 +72,10 @@ const getUserName = async (req: Request, res: Response) => {
 
 const getUserDetails = async (req: Request, res: Response) => {
   try {
+    console.log('reacheddd')
     const userId = req.headers["user-id"] as string;
     const details=await userServices.getUserDetails(userId)
+    console.log('details', details.user)
     res.json({ success: true, user:details.user });
   } catch (error) {
     console.log(error);

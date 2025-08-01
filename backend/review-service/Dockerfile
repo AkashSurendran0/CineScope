@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5002
 
-CMD [ "node", "src/index.js" ]
+CMD [ "node", "dist/index.js" ]

@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
 const excludedPaths = ['/userLogIn', '/userSignIn', '/clearCookie', '/getUserName'];
 export const verifyToken = async (req, res, next) => {
     console.log(req.path);

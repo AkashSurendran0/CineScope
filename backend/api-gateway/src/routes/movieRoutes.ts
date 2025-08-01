@@ -1,6 +1,6 @@
 // routes/movieRoutes.ts
 import express from 'express';
-import { movieProxy } from '../utils/createProxy';
+import { movieProxy } from '../utils/createProxy.js';
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import movieRoutes from './routes/movieRoutes.js';
-dotenv.config();
+import loadSecrets from './helpers/vault.js';
+await loadSecrets();
 const app = express();
 app.use(express.json());
 app.use('/', movieRoutes);

@@ -1,22 +1,22 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import userRoutes from './routes/userRoutes.js'
-import {connectDb, sequelize} from './helpers/connectDb.js'
+import express from 'express';
+import loadSecrets from './helpers/vault.js';
 
-dotenv.config()
-const app=express()
-connectDb()
+await loadSecrets();
 
-sequelize.sync({ alter: true }) // Creates table if not exists
-    .then(() => console.log("✅ Tables synced"))
-    .catch((err) => console.log("❌ Sync error:", err));
+import { connectDb, getSequelize } from './helpers/connectDb.js';
+await connectDb();
 
-app.use(express.json())
+import { initUserModel } from './models/userModel.js';
+initUserModel();
 
-app.use('/', userRoutes)
+const sequelize = getSequelize();
+await sequelize.sync({ alter: true });
 
-const PORT=process.env.PORT || 5561
+const app = express();
+app.use(express.json());
 
-app.listen(PORT, ()=>{
-    console.log(`user-service running at ${PORT}`)
-})
+const userRoutes = (await import('./routes/userRoutes.js')).default;
+app.use('/', userRoutes);
+
+const PORT = process.env.PORT || 5561;
+app.listen(PORT, () => console.log(`✅ user-service running at ${PORT}`));

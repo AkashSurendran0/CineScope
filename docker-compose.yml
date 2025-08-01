@@ -1,70 +1,176 @@
-version: '3.8'
-
 services:
   api-gateway:
     build: ./backend/api-gateway
     ports:
       - "5000:5000"
+    depends_on:
+      - user-service
+      - movie-service
+      - review-service
+    networks:
+      - cinescope-net
 
   user-service:
     build: ./backend/user-service
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=akash123
+      - POSTGRES_DB=cinescope_users
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - cinescope-net
     ports:
       - "5001:5001"
-    depends_on:
-      - redis
+
+  postgres:
+    image: postgres:15
+    container_name: cinescope-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: akash123
+      POSTGRES_DB: cinescope_users
+    ports:
+      - "5432:5432"
+    networks:
+      - cinescope-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: cinescope-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - cinescope-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   movie-service:
     build: ./backend/movie-service
     ports:
       - "5003:5003"
+    networks:
+      - cinescope-net
 
   review-service:
     build: ./backend/review-service
     ports:
       - "5002:5002"
-
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
-
-  addreview-app:
-    build: ./frontend/addReview-app
-    ports:
-      - "3002:3002"
-
-  auth-app:
-    build: ./frontend/auth-app
-    ports:
-      - "3000:3000"
-
-  container-app:
-    build: ./frontend/container-app
-    ports:
-      - "5173:5173"
-
-  home-app:
-    build: ./frontend/home-app
-    ports:
-      - "3001:3001"
-
-  profile-app:
-    build: ./frontend/profile-app
-    ports:
-      - "3004:3004"
-
-  shared-components:
-    build: ./frontend/shared-components
-    ports:
-      - "3010:3010"
-
-  yourreview-app:
-    build: ./frontend/yourreview-app
-    ports:
-      - "3003:3003"
+    depends_on:
+      - mongo
+    networks:
+      - cinescope-net
 
   mongo:
     image: mongo
     container_name: mongo
     ports:
       - "27017:27017"
+    networks:
+      - cinescope-net
+
+  addreview-app:
+    build: ./frontend/addReview-app
+    ports:
+      - "3002:3002"
+    networks:
+      - cinescope-net
+
+  auth-app:
+    build: ./frontend/auth-app
+    ports:
+      - "3000:3000"
+    networks:
+      - cinescope-net
+
+  container-app:
+    build: ./frontend/container-app
+    ports:
+      - "5173:5173"
+    networks:
+      - cinescope-net
+
+  home-app:
+    build: ./frontend/home-app
+    ports:
+      - "3001:3001"
+    networks:
+      - cinescope-net
+
+  profile-app:
+    build: ./frontend/profile-app
+    ports:
+      - "3004:3004"
+    networks:
+      - cinescope-net
+
+  shared-components:
+    build: ./frontend/shared-components
+    ports:
+      - "3010:3010"
+    networks:
+      - cinescope-net
+
+  yourreview-app:
+    build: ./frontend/yourreview-app
+    ports:
+      - "3003:3003"
+    networks:
+      - cinescope-net
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/config/config.yml
+      - ./monitoring/loki-data:/loki
+    command: -config.file=/etc/loki/config/config.yml
+
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "4000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - loki
+
+volumes:
+  postgres_data: {}
+  grafana-storage:
+
+networks:
+  cinescope-net:
+    driver: bridge

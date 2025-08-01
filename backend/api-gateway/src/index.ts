@@ -1,17 +1,16 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
-import userRoutes from './routes/userRoutes';
-import movieRoutes from './routes/movieRoutes';
-import reviewRoutes from './routes/reviewRoutes';
+import userRoutes from './routes/userRoutes.js';
+import movieRoutes from './routes/movieRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 import cookieParser from 'cookie-parser';
-import { rateLimitter } from './utils/rateLimitter';
+import { rateLimitter } from './utils/rateLimitter.js';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
+import loadSecrets from './utils/vault.js';
 
-dotenv.config();
-
+await loadSecrets()
 const app = express();
 
 app.use(cookieParser());
@@ -36,7 +35,7 @@ app.use('/reviews', reviewRoutes);
 
 app.use(express.json());
 
-const PORT = process.env.PORT || 5560;
+const PORT = process.env.PORT;
 
 try {
   

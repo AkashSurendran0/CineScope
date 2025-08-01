@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
 import movieService from '../services/movieService.js';
-dotenv.config();
 const fetchMovies = async (req, res) => {
     try {
         const film = req.query.query;

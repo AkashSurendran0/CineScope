@@ -1,18 +1,21 @@
 import { Sequelize } from "sequelize";
-import dotenv from 'dotenv'
 
-dotenv.config()
+let sequelize;
 
-export const sequelize=new Sequelize(process.env.POSTGRES_URL as string, {
-    dialect: 'postgres',
-    logging: false
-}) 
+export const connectDb = async () => {
+    sequelize = new Sequelize(process.env.POSTGRES_URL, {
+        dialect: 'postgres',
+        logging: false
+    });
 
-export const connectDb = async() =>{
     try {
-        await sequelize.authenticate()
-        console.log('Postgres connected successfully')
+        await sequelize.authenticate();
+        console.log('✅ Postgres connected successfully');
     } catch (err) {
-        console.log('Postgres connection failes', err)
+        console.log('❌ Postgres connection failed', err);
     }
-}
+
+    return sequelize;
+};
+
+export const getSequelize = () => sequelize;

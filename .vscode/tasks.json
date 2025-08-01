@@ -4,101 +4,100 @@
         {
             "label": "auth-app",
             "type": "shell",
-            "command":"npm run build-preview",
-            "options": {
-                "cwd": "frontend/auth-app"
-            },
-            "group": "build"
+            "command": "npm run build-preview",
+            "options": { "cwd": "frontend/auth-app" }
         },
         {
             "label": "home-app",
             "type": "shell",
-            "command":"npm run build-preview",
-            "options": {
-                "cwd": "frontend/home-app"
-            },
-            "group": "build"
+            "command": "npm run build-preview",
+            "options": { "cwd": "frontend/home-app" }
         },
         {
             "label": "shared-components",
             "type": "shell",
-            "command":"npm run build-preview",
-            "options": {
-                "cwd": "frontend/shared-components"
-            },
-            "group": "build"
+            "command": "npm run build-preview",
+            "options": { "cwd": "frontend/shared-components" }
         },
         {
             "label": "container-app",
             "type": "shell",
-            "command":"npm run dev",
-            "options": {
-                "cwd": "frontend/container-app"
-            },
-            "group": "build"
+            "command": "npm run dev",
+            "options": { "cwd": "frontend/container-app" }
         },
         {
             "label": "addReview-app",
             "type": "shell",
-            "command":"npm run build-preview",
-            "options": {
-                "cwd": "frontend/addReview-app"
-            },
-            "group": "build"
+            "command": "npm run build-preview",
+            "options": { "cwd": "frontend/addReview-app" }
         },
         {
             "label": "yourReviews-app",
             "type": "shell",
-            "command":"npm run build-preview",
-            "options": {
-                "cwd": "frontend/yourreview-app"
-            },
-            "group": "build"
+            "command": "npm run build-preview",
+            "options": { "cwd": "frontend/yourreview-app" }
         },
         {
             "label": "profile-app",
             "type": "shell",
-            "command":"npm run build-preview",
-            "options": {
-                "cwd": "frontend/profile-app"
-            },
-            "group": "build"
+            "command": "npm run build-preview",
+            "options": { "cwd": "frontend/profile-app" }
         },
         {
             "label": "api-gateway",
             "type": "shell",
-            "command":"npm run dev",
-            "options": {
-                "cwd": "backend/api-gateway"
-            },
-            "group": "build"
+            "command": "npm run dev",
+            "options": { "cwd": "backend/api-gateway" }
         },
         {
             "label": "user-service",
             "type": "shell",
-            "command":"npm run dev",
-            "options": {
-                "cwd": "backend/user-service"
-            },
-            "group": "build"
+            "command": "npm run dev",
+            "options": { "cwd": "backend/user-service" }
         },
         {
             "label": "movie-service",
             "type": "shell",
-            "command":"npm run dev",
-            "options": {
-                "cwd": "backend/movie-service"
-            },
-            "group": "build"
+            "command": "npm run dev",
+            "options": { "cwd": "backend/movie-service" }
         },
         {
             "label": "review-service",
             "type": "shell",
-            "command":"npm run dev",
-            "options": {
-                "cwd": "backend/review-service"
-            },
-            "group": "build"
+            "command": "npm run dev",
+            "options": { "cwd": "backend/review-service" }
         },
+        {
+            "label": "Docker destroy images",
+            "type": "shell",
+            "command": "docker-compose down"
+        },
+        {
+            "label": "Docker build images",
+            "type": "shell",
+            "command": "docker-compose build"
+        },
+        {
+            "label": "Docker run images",
+            "type": "shell",
+            "command": "docker-compose up"
+        },
+        {
+            "label": "Start All Services",
+            "dependsOn": [
+                "auth-app",
+                "home-app",
+                "shared-components",
+                "container-app",
+                "addReview-app",
+                "yourReviews-app",
+                "profile-app",
+                "api-gateway",
+                "user-service",
+                "movie-service",
+                "review-service"
+            ],
+            "dependsOrder": "parallel"
+        }
     ]
 }

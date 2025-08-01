@@ -1,6 +1,6 @@
 import express from 'express'
-import { userProxy } from '../utils/createProxy'
-import { verifyToken } from '../utils/jwtChecker';
+import { userProxy } from '../utils/createProxy.js'
+import { verifyToken } from '../utils/jwtChecker.js';
 
 const router=express.Router()
 

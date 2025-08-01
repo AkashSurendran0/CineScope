@@ -1,9 +1,6 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import movieService from '../services/movieService.js';
-
-dotenv.config();
 
 const fetchMovies = async (req: Request, res: Response): Promise<void> => {
   try {

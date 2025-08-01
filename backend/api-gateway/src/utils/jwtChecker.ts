@@ -1,8 +1,6 @@
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { Request, Response, NextFunction } from 'express';
 
-dotenv.config();
 
 const excludedPaths = ['/userLogIn', '/userSignIn', '/clearCookie', '/getUserName'];
 

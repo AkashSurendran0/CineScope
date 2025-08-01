@@ -1,0 +1,54 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker-logs
+          __path__: /var/lib/docker/containers/*/*.log
+
+  - job_name: api-gateway-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: api-gateway
+          service: api-gateway
+          __path__: /var/lib/docker/containers/*/*.log
+        
+  - job_name: user-service-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: user-service
+          service: user-service
+          __path__: /var/lib/docker/containers/*/*.log
+
+  - job_name: movie-service-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: movie-service
+          service: movie-service
+          __path__: /var/lib/docker/containers/*/*.log
+
+  - job_name: review-service-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: review-service
+          service: review-service
+          __path__: /var/lib/docker/containers/*/*.log

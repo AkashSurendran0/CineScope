@@ -73,8 +73,10 @@ const getUserName = async (req, res) => {
 };
 const getUserDetails = async (req, res) => {
     try {
+        console.log('reacheddd');
         const userId = req.headers["user-id"];
         const details = await userServices.getUserDetails(userId);
+        console.log('details', details.user);
         res.json({ success: true, user: details.user });
     }
     catch (error) {
